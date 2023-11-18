@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -53,25 +55,34 @@ fun FilterComponent(onClick: () -> Unit) {
 }
 @Composable
 fun AppOverviewComponent() {
-    Row(){
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp))
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .padding(top = 8.dp)
+    )
+    {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 10.dp)
+        )
         {
             Text(
+                modifier = Modifier.weight(1f),
                 text = "Hi User!",
                 style = MaterialTheme.typography.headlineMedium
             )
+            FilterComponent(onClick = {
 
-            Text(
-                text = "8 tasks for today Monday",
-                style = MaterialTheme.typography.titleMedium,
-                color = Gray
-            )
+            })
+            SortComponent(onClick = {
+
+            })
         }
-        FilterComponent(onClick = {
-
-        })
-        SortComponent(onClick = {
-
-        })
+        Text(
+            text = "8 tasks for today Monday",
+            style = MaterialTheme.typography.titleMedium,
+            color = Gray
+        )
     }
 }

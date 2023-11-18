@@ -9,12 +9,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.taskmanager_comp4521.Task
 
 @Composable
 fun MainPageComponent(
     tasks: List<Task>,
-    MenuBTNonClick: () -> Unit
+    menuBTNonClick: () -> Unit,
+    navController: NavController
 ) {
     Column(
         modifier = Modifier
@@ -25,7 +27,7 @@ fun MainPageComponent(
         Column(
             modifier = Modifier.weight(3f)
         ){
-            HeaderComponent(MenuBTNonClick)
+            HeaderComponent(menuBTNonClick, navController)
             AppOverviewComponent()
         }
 
@@ -35,7 +37,6 @@ fun MainPageComponent(
             LazyColumn(
                 contentPadding = PaddingValues(
                     start = 16.dp,
-                    top = 16.dp,
                     bottom = 16.dp
                 )
             ){
@@ -50,7 +51,7 @@ fun MainPageComponent(
         Column(
             modifier = Modifier.weight(1f)
         ){
-            AddTaskBtnComponent()
+            AddTaskBtnComponent(navController)
         }
     }
 }

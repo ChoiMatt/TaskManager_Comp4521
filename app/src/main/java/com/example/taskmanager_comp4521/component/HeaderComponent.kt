@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.taskmanager_comp4521.R
+import com.example.taskmanager_comp4521.Screen
 
 @Composable
-fun HeaderComponent(MenuBTNonClick: () -> Unit) {
+fun HeaderComponent(menuBTNonClick: () -> Unit, navController: NavController) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -31,7 +33,7 @@ fun HeaderComponent(MenuBTNonClick: () -> Unit) {
             contentDescription = "Menu",
             modifier = Modifier
                 .padding(end= 16.dp)
-                .clickable(onClick = MenuBTNonClick)
+                .clickable(onClick = menuBTNonClick)
         )
         Image(painter = painterResource(id = R.drawable.wonder_woman),
             contentDescription = "Profile Picture",
@@ -41,7 +43,10 @@ fun HeaderComponent(MenuBTNonClick: () -> Unit) {
         )
         Icon(imageVector = Icons.Filled.Settings,
             contentDescription = "Settings",
-            modifier = Modifier.padding(end= 16.dp))
+            modifier = Modifier
+                .padding(end= 16.dp)
+                .clickable(onClick = {navController.navigate(Screen.SettingScreen.route)})
+        )
     }
 }
 
