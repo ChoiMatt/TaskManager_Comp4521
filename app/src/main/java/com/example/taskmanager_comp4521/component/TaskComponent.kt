@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +18,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.taskmanager_comp4521.Task
+import com.example.taskmanager_comp4521.subTask
 
 @Composable
 fun ProgressComponent(
@@ -41,7 +44,7 @@ fun ProgressComponent(
     LinearProgressIndicator(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp ,end = 4.dp )
+            .padding(start = 4.dp, end = 4.dp)
             .height(10.dp)
             .clip(MaterialTheme.shapes.small),
         progress = currentProgress,
@@ -56,7 +59,8 @@ fun TaskOverviewComponent(
     month: String,
     title: String,
     tag: String,
-    time: String)
+    time: String,
+    priority: String)
 {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -73,13 +77,11 @@ fun TaskOverviewComponent(
         ) {
             Text(
                 text = day,
-                modifier = Modifier.padding(bottom = 2.dp),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = date,
-                modifier = Modifier.padding(bottom = 2.dp),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -123,19 +125,46 @@ fun TaskOverviewComponent(
                     modifier = Modifier.size(30.dp)
                 )
             }
-
             Text(
                 text = "#"+tag,
                 modifier = Modifier.padding(bottom = 4.dp),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.Black.copy(alpha = 0.5f)
             )
-            Text(
-                text = time,
-                modifier = Modifier.padding(bottom = 16.dp),
-                fontSize = 12.sp,
-                color = Color.Black.copy(alpha = 0.5f)
-            )
+
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 14.dp),
+                verticalAlignment = Alignment.Top
+            ){
+                val color = when (priority) {
+                    "High" -> Color.Red
+                    "Normal" -> Color.hsv(25f,0.41f,0.98f)
+                    "Low" -> Color.Yellow
+                    else -> Color.Black.copy(alpha = 0.5f) // Default color
+                }
+                Text(
+                    text = time,
+                    fontSize = 12.sp,
+                    color = Color.Black.copy(alpha = 0.5f),
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                    Text(
+                        text = "Priority: ",
+                        //modifier = Modifier.padding(bottom = 14.dp),
+                        fontSize = 12.sp,
+                        color = Color.Black.copy(alpha = 0.5f)
+                    )
+                    Text(
+                        text = priority,
+                        //modifier = Modifier.padding(bottom = 14.dp),
+                        fontSize = 12.sp,
+                        color = color
+                    )
+
+            }
+
             ProgressComponent(
                 currentProgress = 0.7f
             )
@@ -144,8 +173,51 @@ fun TaskOverviewComponent(
     }
 }
 @Composable
-fun TaskDetailComponent() {
-    
+fun TaskDetailComponent(
+    description: String,
+    subTasks: List<subTask>
+) {
+    Box( modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 14.dp)
+    )
+    {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+        )
+        {
+            Text(
+                text = description,
+                modifier = Modifier
+                    .padding(bottom = 14.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+            subTasks.forEach { subTask ->
+                Row(modifier = Modifier
+                    .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    Text(
+                        text = subTask.title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Checkbox(
+                        checked = subTask.completed,
+                        onCheckedChange = { //TODO
+                        }
+                    )
+                }
+            }
+        }
+    }
+
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -154,7 +226,7 @@ fun TaskStructureComponent(
     titleFontWeight: FontWeight = FontWeight.Bold,
     descriptionFontWeight: FontWeight = FontWeight.Normal,
     descriptionMaxLines: Int = 4,
-    paddingHorizonal: Dp = 16.dp,
+    paddingHorizontal: Dp = 16.dp,
     paddingVertical: Dp = 12.dp,
 ) {
     var expandedState by remember { mutableStateOf(false) }
@@ -163,14 +235,14 @@ fun TaskStructureComponent(
             .fillMaxWidth()
             .animateContentSize(
                 animationSpec = tween(
-                    durationMillis = 300,
+                    durationMillis = 500,
                     easing = LinearOutSlowInEasing
                 )
             )
             .clip(shape = MaterialTheme.shapes.small)
             .padding(
-                start = paddingHorizonal,
-                end = paddingHorizonal,
+                start = paddingHorizontal,
+                end = paddingHorizontal,
                 top = paddingVertical,
                 bottom = paddingVertical
             ),
@@ -180,13 +252,6 @@ fun TaskStructureComponent(
     ) {
         Column(
             modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(
-//                    start = paddingHorizonal,
-//                    end = paddingHorizonal,
-//                    top = paddingVertical,
-//                    bottom = paddingVertical
-//                )
                 .clip(shape = MaterialTheme.shapes.medium)
                 .background(color = MaterialTheme.colorScheme.primaryContainer)
             ) {
@@ -196,43 +261,14 @@ fun TaskStructureComponent(
                 month = task.month,
                 title = task.title,
                 tag = task.tag,
-                time = task.time
+                time = task.time,
+                priority = task.priority
             )
             if (expandedState) {
-                Text(
-                    text = "Hi i am a place holder for the description",
-                    fontWeight = descriptionFontWeight,
-                    maxLines = descriptionMaxLines,
-                    overflow = TextOverflow.Ellipsis
-                )
+                TaskDetailComponent(description = task.description, subTasks = task.subTasks)
             }
         }
     }
 }
 
-
-//@Composable
-//@Preview
-//fun ExpandableCardPreview() {
-//
-//    TaskManager_Comp4521Theme(darkTheme = false){
-//        TaskStructureComponent(
-//        title = "My Title",
-//        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-//                "sed do eiusmod tempor incididunt ut labore et dolore magna " +
-//                "aliqua. Ut enim ad minim veniam, quis nostrud exercitation " +
-//                "ullamco laboris nisi ut aliquip ex ea commodo consequat."
-//        )
-//    }
-////    TaskOverviewComponent(
-////        day = "Sun",
-////        date = "15",
-////        month = "Dec",
-////        title = "Quiz",
-////        tag ="hi i am quiz" ,
-////        time = "09:30",
-////        optionsIcon = Icons.Default.MoreVert
-////    )
-//
-//}
 
