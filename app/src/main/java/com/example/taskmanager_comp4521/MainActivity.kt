@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,10 +17,12 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.getValue
@@ -94,65 +97,65 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TaskManager_Comp4521Theme(darkTheme = false){
+            TaskManager_Comp4521Theme(darkTheme = true
+            ){
                 // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    Greeting("Android")
-//                }
-                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-                val scope = rememberCoroutineScope()
-                var selectedItemIndex by rememberSaveable {
-                    mutableStateOf(0)
-                }
-                ModalNavigationDrawer(
-                    drawerContent = {
-                        ModalDrawerSheet {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            items.forEachIndexed { index, item ->
-                                NavigationDrawerItem(
-                                    label = {
-                                        Text(text = item.title)
-                                    },
-                                    selected = index == selectedItemIndex,
-                                    onClick = {
-//                                            navController.navigate(item.route)
-                                        selectedItemIndex = index
-                                        scope.launch {
-                                            drawerState.close()
-                                        }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = if (index == selectedItemIndex) {
-                                                item.selectedIcon
-                                            } else item.unselectedIcon,
-                                            contentDescription = item.title
-                                        )
-                                    },
-                                    badge = {
-                                        item.badgeCount?.let {
-                                            Text(text = item.badgeCount.toString())
-                                        }
-                                    },
-                                    modifier = Modifier
-                                        .padding(NavigationDrawerItemDefaults.ItemPadding)
-                                )
-                            }
-                        }
-                    },
-                    drawerState = drawerState
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.error
                 ) {
-                    Navigation(
-                        sampleTasks,
-                        {
-                            scope.launch {
-                                drawerState.open()
+                    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                    val scope = rememberCoroutineScope()
+                    var selectedItemIndex by rememberSaveable {
+                        mutableStateOf(0)
+                    }
+                    ModalNavigationDrawer(
+                        drawerContent = {
+                            ModalDrawerSheet {
+                                Spacer(modifier = Modifier.height(16.dp))
+                                items.forEachIndexed { index, item ->
+                                    NavigationDrawerItem(
+                                        label = {
+                                            Text(text = item.title)
+                                        },
+                                        selected = index == selectedItemIndex,
+                                        onClick = {
+//                                            navController.navigate(item.route)
+                                            selectedItemIndex = index
+                                            scope.launch {
+                                                drawerState.close()
+                                            }
+                                        },
+                                        icon = {
+                                            Icon(
+                                                imageVector = if (index == selectedItemIndex) {
+                                                    item.selectedIcon
+                                                } else item.unselectedIcon,
+                                                contentDescription = item.title
+                                            )
+                                        },
+                                        badge = {
+                                            item.badgeCount?.let {
+                                                Text(text = item.badgeCount.toString())
+                                            }
+                                        },
+                                        modifier = Modifier
+                                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                                    )
+                                }
                             }
-                        }
-                    )
+                        },
+                        drawerState = drawerState
+                    ) {
+                        Navigation(
+                            sampleTasks,
+                            {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }

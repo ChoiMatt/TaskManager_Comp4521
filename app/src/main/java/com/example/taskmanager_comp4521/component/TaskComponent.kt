@@ -3,7 +3,6 @@ package com.example.taskmanager_comp4521.component
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +13,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -66,7 +69,7 @@ fun TaskOverviewComponent(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(135.dp)
             .padding(2.dp)
     ) {
         Column(
@@ -119,14 +122,41 @@ fun TaskOverviewComponent(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Image(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = "Options",
-                    modifier = Modifier.size(30.dp)
-                )
+                Box(
+                    modifier = Modifier.wrapContentSize()
+                ){
+                    var expanded by remember { mutableStateOf(false) }
+                    IconButton(onClick = { expanded = true }){
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Options",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = {  Text("Edit") },
+                            onClick = { /* Handle refresh! */ }
+                        )
+                        Divider()
+                        DropdownMenuItem(
+                            text = { Text("Delete") },
+                            onClick = { /* Handle settings! */ }
+                        )
+                        Divider()
+                        DropdownMenuItem(
+                            text = { Text("Complete") },
+                            onClick = { /* Handle send feedback! */ }
+                        )
+                    }
+                }
+
             }
             Text(
-                text = "#"+tag,
+                text = "#$tag",
                 modifier = Modifier.padding(bottom = 4.dp),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.Black.copy(alpha = 0.5f)
@@ -223,9 +253,6 @@ fun TaskDetailComponent(
 @Composable
 fun TaskStructureComponent(
     task: Task,
-    titleFontWeight: FontWeight = FontWeight.Bold,
-    descriptionFontWeight: FontWeight = FontWeight.Normal,
-    descriptionMaxLines: Int = 4,
     paddingHorizontal: Dp = 16.dp,
     paddingVertical: Dp = 12.dp,
 ) {
