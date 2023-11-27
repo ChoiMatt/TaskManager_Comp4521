@@ -51,7 +51,7 @@ fun ProgressComponent(
             .height(10.dp)
             .clip(MaterialTheme.shapes.small),
         progress = currentProgress,
-        color = MaterialTheme.colorScheme.primary,
+//        color = MaterialTheme.colorScheme.primary,
         trackColor = Color.White
     )
 }
@@ -81,17 +81,17 @@ fun TaskOverviewComponent(
             Text(
                 text = day,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.secondary
+//                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = date,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.secondary
+//                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = month,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.secondary
+//                color = MaterialTheme.colorScheme.secondary
             )
         }
 
@@ -118,7 +118,7 @@ fun TaskOverviewComponent(
                     text = title,
                     modifier = Modifier.weight(1f),
                     fontSize = 20.sp,
-                    color = Color.Black,
+//                    color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -176,7 +176,7 @@ fun TaskOverviewComponent(
                 Text(
                     text = time,
                     fontSize = 12.sp,
-                    color = Color.Black.copy(alpha = 0.5f),
+//                    color = Color.Black.copy(alpha = 0.5f),
                     modifier = Modifier
                         .weight(1f)
                 )
@@ -184,7 +184,7 @@ fun TaskOverviewComponent(
                         text = "Priority: ",
                         //modifier = Modifier.padding(bottom = 14.dp),
                         fontSize = 12.sp,
-                        color = Color.Black.copy(alpha = 0.5f)
+//                        color = Color.Black.copy(alpha = 0.5f)
                     )
                     Text(
                         text = priority,
@@ -215,7 +215,7 @@ fun TaskDetailComponent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(5.dp),
+                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp),
         )
         {
             Text(
@@ -227,11 +227,20 @@ fun TaskDetailComponent(
                 overflow = TextOverflow.Ellipsis
             )
             subTasks.forEach { subTask ->
+                val index = subTasks.indexOf(subTask)
+                var isChecked by remember { mutableStateOf(subTask.completed) }
                 Row(modifier = Modifier
                     .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
+                    Text(
+                        text = "subTask $index:",
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                     Text(
                         text = subTask.title,
                         style = MaterialTheme.typography.bodyMedium,
@@ -239,8 +248,9 @@ fun TaskDetailComponent(
                         overflow = TextOverflow.Ellipsis
                     )
                     Checkbox(
-                        checked = subTask.completed,
-                        onCheckedChange = { //TODO
+                        checked = isChecked,
+                        onCheckedChange = {
+                            isChecked = !isChecked
                         }
                     )
                 }
@@ -255,6 +265,7 @@ fun TaskStructureComponent(
     task: Task,
     paddingHorizontal: Dp = 16.dp,
     paddingVertical: Dp = 12.dp,
+    bgcolor: Color
 ) {
     var expandedState by remember { mutableStateOf(false) }
     Card(
@@ -280,7 +291,7 @@ fun TaskStructureComponent(
         Column(
             modifier = Modifier
                 .clip(shape = MaterialTheme.shapes.medium)
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
+                .background(bgcolor)
             ) {
             TaskOverviewComponent(
                 day = task.day,

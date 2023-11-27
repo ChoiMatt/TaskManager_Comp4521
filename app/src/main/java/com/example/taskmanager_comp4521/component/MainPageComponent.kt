@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -41,8 +42,14 @@ fun MainPageComponent(
                 )
             ){
                 tasks.forEach { task ->
+                    val index = tasks.indexOf(task)
                     item{
-                        TaskStructureComponent(task)
+                        if (index % 2 == 0){
+                            TaskStructureComponent(task, bgcolor = MaterialTheme.colorScheme.primaryContainer)
+                        }
+                        else{
+                            TaskStructureComponent(task, bgcolor = MaterialTheme.colorScheme.secondaryContainer)
+                        }
                     }
                 }
             }
