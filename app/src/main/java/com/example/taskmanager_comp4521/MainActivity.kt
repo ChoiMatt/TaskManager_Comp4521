@@ -25,6 +25,7 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,8 +33,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
 import com.example.taskmanager_comp4521.component.Navigation
+import com.example.taskmanager_comp4521.datastore.StoreUserPreference
 import com.example.taskmanager_comp4521.ui.theme.TaskManager_Comp4521Theme
 import kotlinx.coroutines.launch
 
@@ -97,14 +101,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TaskManager_Comp4521Theme(darkTheme = false
+            val context = LocalContext.current
+            val scope = rememberCoroutineScope()
+            val dataStore = StoreUserPreference(context)
+            val darkTheme = dataStore.getThemePreference.collectAsState(initial = false)
+            TaskManager_Comp4521Theme(darkTheme = darkTheme.value?:false
             ){
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
+                    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     var selectedItemIndex by rememberSaveable {
                         mutableStateOf(0)
                     }

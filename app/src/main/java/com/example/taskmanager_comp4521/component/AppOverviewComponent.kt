@@ -18,13 +18,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.taskmanager_comp4521.datastore.StoreUserPreference
 
 @Composable
 fun SortComponent() {
@@ -114,6 +118,10 @@ fun FilterComponent() {
 }
 @Composable
 fun AppOverviewComponent() {
+    val context = LocalContext.current
+    val dataStore = StoreUserPreference(context)
+    val savedName = dataStore.getUserName.collectAsState(initial = "")
+    val name = if (savedName.value.isNullOrEmpty()) "User" else savedName.value
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -128,7 +136,8 @@ fun AppOverviewComponent() {
         {
             Text(
                 modifier = Modifier.weight(1f),
-                text = "Hi User!",
+                //text = "Hi User!",
+                text = "Hi $name!",
                 style = MaterialTheme.typography.headlineMedium
             )
             FilterComponent()
